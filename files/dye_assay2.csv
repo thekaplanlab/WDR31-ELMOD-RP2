@@ -1,0 +1,4 @@
+Genotype,Head(Normal),Tail(Normal),Head(Partial),Tail(Partial),Head(Abnormal),Tail(Abnormal)
+Wild Type,24,24,0,0,0,0
+wdr-31(261del),13,11,0,0,0,0
+wdr-31(261del); elmd-1;rpi-2,6,0,18,0,81,83
