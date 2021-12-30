@@ -7,7 +7,7 @@
 
 
 
-pkgList<-c("data.table","dplyr","tidyr","ggplot2","xlsx","readxl","RColorBrewer")
+pkgList<-c("data.table","dplyr","tidyr","ggplot2","xlsx","readxl","RColorBrewer","forcats")
 new.packages <- pkgList[!(pkgList %in% installed.packages()[,"Package"])]
 if(length(new.packages)>0) install.packages(new.packages)
 
@@ -18,6 +18,7 @@ library(ggplot2)
 library(xlsx)
 library(readxl)
 library(RColorBrewer)
+library(forcats)
 
 options(warn=-1)
 
@@ -201,7 +202,7 @@ gcy_length<-sapply(gcy_length, as.numeric)
 gcy_length1<-pivot_longer(as_tibble(gcy_length), cols = 1:8, names_to = "Genotype", values_to = "Length")
 gcy_length1<-gcy_length1[!is.na(gcy_length1$Length),]
 gcy_length1$Genotype<-factor(gcy_length1$Genotype, levels = unique(gcy_length1$Genotype))
-
+gcy_length1$Genotype<-fct_rev(gcy_length1$Genotype)
 
 # PHA/PHB length
 srb6_length<-read.xlsx("./files/gcy-5_and_srb-6p.xlsx", sheetIndex = 2, check.names = FALSE)
@@ -211,7 +212,7 @@ srb6_length<-sapply(srb6_length, as.numeric)
 srb6_length1<-pivot_longer(as_tibble(srb6_length), cols = 1:8, names_to = "Genotype", values_to = "Length")
 srb6_length1<-srb6_length1[!is.na(srb6_length1$Length),]
 srb6_length1$Genotype<-factor(srb6_length1$Genotype, levels = unique(srb6_length1$Genotype))
-
+srb6_length1$Genotype<-fct_rev(srb6_length1$Genotype)
 
 # AWB length 2
 awb_length<-read.xlsx("./files/awb_length.xlsx", sheetIndex = 1)

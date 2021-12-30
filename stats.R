@@ -73,8 +73,8 @@ write.xlsx(long_length_s, "cilia_length.xlsx", sheetName = "Long_cilia_significa
 write.xlsx(short_length_s, "cilia_length.xlsx", sheetName = "Short_cilia_significance", col.names = TRUE, append = TRUE)
 write.xlsx(long_length, "cilia_length.xlsx", sheetName = "Long_cilia_p_val", col.names = TRUE, append = TRUE)
 write.xlsx(short_length, "cilia_length.xlsx", sheetName = "Short_cilia_p_val", col.names = TRUE, append = TRUE)
-write.xlsx(srb_length_s, "cilia_length.xlsx", sheetName = "PHA/PHB_cilia_significance", col.names = TRUE, append = TRUE)
-write.xlsx(srb_length_p, "cilia_length.xlsx", sheetName = "PHA/PHB_cilia_p_val", col.names = TRUE, append = TRUE)
+write.xlsx(srb_length_s, "cilia_length.xlsx", sheetName = "PHA_PHB_cilia_significance", col.names = TRUE, append = TRUE)
+write.xlsx(srb_length_p, "cilia_length.xlsx", sheetName = "PHA_PHB_cilia_p_val", col.names = TRUE, append = TRUE)
 write.xlsx(gcy_length1_s, "cilia_length.xlsx", sheetName = "ASER_cilia_significance", col.names = TRUE, append = TRUE)
 write.xlsx(gcy_length1_p, "cilia_length.xlsx", sheetName = "ASER_cilia_p_val", col.names = TRUE, append = TRUE)
 
