@@ -233,4 +233,25 @@ awb_length1<-awb_length1[!is.na(awb_length1$length),]
 awb_length1$Genotype<-factor(awb_length1$Genotype, levels = rev(unique(awb_length1$Genotype)))
 
 
+# New IFT plots
+
+ifts<-list()
+
+for (i in 1:4){
+  
+  iftx<-suppressMessages(read_xlsx("files/IFT_Velocity_IFT_frequency_edited.xlsx", sheet = i))
+  
+  iftx<-iftx[-1,]
+  ift_long<-pivot_longer(iftx, everything(), names_to = "Genotype", values_to = "Speed1", values_drop_na = TRUE)
+  
+  ifty<-suppressMessages(read_xlsx("files/IFT_Velocity_IFT_frequency_edited.xlsx", sheet = i, skip = 1))
+  ift_long_2<-pivot_longer(ifty, everything(), names_to = "Part", values_to = "Speed", values_drop_na = TRUE)
+  
+  ift_all<-cbind(ift_long, ift_long_2)
+  ift_all<-ift_all %>% select(-Speed1)
+  ift_all[,1:2]<-as.data.frame(lapply(ift_all[,1:2], function(x) gsub("\\.\\.\\.[0-9]+", "", x)))
+  
+  ifts[[i]]<-ift_all
+}
+
 
