@@ -253,4 +253,34 @@ ggplot(ift[ift$IFT == "Retrograde" & ift$Marker == "BBS-7::GFP",], aes(x = Marke
 
 
 
+# AWB cilia morphology
+ggplot(morphologyn1, aes(x = Genotype, y = Count)) +
+  geom_bar(aes(color = Phenotype, fill = Phenotype),
+           stat = "identity", position = position_stack(), width = 0.8) +
+  scale_fill_manual(values = prpls[c(3,5,7,9)]) +
+  scale_color_brewer() +
+  theme_classic() +
+  coord_flip() +
+  ylab("Count(%)") +
+  ggtitle("AWB Cilia Morphology") +
+  theme(text = element_text(family = "Open Sans SemiBold"),
+        plot.title = element_text(hjust = 0.4))
+
+ggsave("awb_morphology.jpg", width = 11, height = 7, dpi = 300) 
+
+
+ggplot(morphologym1, aes(x = Genotype, y = Count)) +
+  geom_bar(aes(color = Phenotype, fill = Phenotype),
+           stat = "identity", position = position_stack(), width = 0.8) +
+  scale_fill_manual(values = prpls[c(3,5,7,9)]) +
+  scale_color_brewer() +
+  theme_classic() +
+  coord_flip() +
+  ylab("Count(%)") +
+  ggtitle("AWB Cilia Morphology") +
+  theme(text = element_text(family = "Open Sans SemiBold"),
+        plot.title = element_text(hjust = 0.4))
+
+ggsave("awb_morphology2.jpg", width = 9, height = 7, dpi = 300) 
+
 

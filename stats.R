@@ -192,3 +192,133 @@ for (j in 1:length(markers)){
   write.xlsx(ms, "Anterograde_sig.xlsx", sheetName = paste(markers[j]), append = TRUE)
 }
 
+
+# Morphology 2
+
+n1<-fisher_pairwise_test(morphologyn_stat, significance = TRUE)
+n2<-fisher_pairwise_test(morphologyn_stat)
+
+m1<-fisher_pairwise_test(morphologym_stat, significance = TRUE)
+m2<-fisher_pairwise_test(morphologym_stat)
+
+
+write.xlsx(n2, "morphology_2.xlsx", sheetName = "all", col.names = TRUE)
+write.xlsx(m2, "morphology_2.xlsx", sheetName = "triple", col.names = TRUE, append = TRUE)
+write.xlsx(n1, "morphology_2.xlsx", sheetName = "all_significance", col.names = TRUE, append = TRUE)
+write.xlsx(m1, "morphology_2.xlsx", sheetName = "triple_significance", col.names = TRUE, append = TRUE)
+
+
+# IFT 2
+
+df<-iftzn_all_stat
+df$IFT<-as.character(df$IFT)
+df$Genotype<-as.character(df$Genotype)
+df$Marker<-as.character(df$Marker)
+Length<-"Number.of.Particles"
+genotype<-"Genotype"  
+
+genelist<-unique(df[[genotype]])
+x<-combn(genelist,2)
+y<-length(x)/2
+x1<-parse_expr(genotype)
+x2<-parse_expr(Length)
+m<-matrix("-",nrow = length(genelist), ncol = length(genelist))
+ms<-matrix("-",nrow = length(genelist), ncol = length(genelist))
+markers<-unique(df$Marker)
+markers<-gsub(":", "", markers)
+
+# Retrograde
+for (j in 1:length(markers)){
+  dfx<-df %>%
+    filter(Marker == unique(df$Marker)[j] & IFT == "Retrograde") %>%
+    dplyr::select(Number.of.Particles, Genotype)
+  m<-matrix("-",nrow = length(genelist), ncol = length(genelist))
+  ms<-matrix("-",nrow = length(genelist), ncol = length(genelist))
+  for (i in 1:y){
+    #print(c(x[1,i],x[2,i]))
+    #print(i)
+    s<-shapiro.test(dfx$Number.of.Particles[dfx[[genotype]] %in% c(x[1,i],x[2,i])])
+    
+    if (s$p.value < 0.05){
+      t<-wilcox.test(eval(x2) ~ eval(x1), data = dfx[dfx[[genotype]] %in% c(x[1,i],x[2,i]),], exact = FALSE)
+    }
+    else {
+      t<-t.test(eval(x2) ~ eval(x1), data = dfx[dfx[[genotype]] %in% c(x[1,i],x[2,i]),], alternative = "two.sided", var.equal = FALSE)
+    }
+    
+    m[which(genelist == x[1,i]),which(genelist == x[2,i])]<-as.numeric(t$p.value)
+    if (t$p.value < 0.05 && t$p.value >= 0.01){
+      ms[which(genelist == x[1,i]),which(genelist == x[2,i])]<-"*"
+    }
+    else if (t$p.value < 0.01 && t$p.value >= 0.001){
+      ms[which(genelist == x[1,i]),which(genelist == x[2,i])]<-"**"
+    }
+    else if (t$p.value < 0.001 && t$p.value >= 0.0001){
+      ms[which(genelist == x[1,i]),which(genelist == x[2,i])]<-"***"
+    }
+    else if (t$p.value < 0.0001){
+      ms[which(genelist == x[1,i]),which(genelist == x[2,i])]<-"****"
+    }
+    else {ms[which(genelist == x[1,i]),which(genelist == x[2,i])]<-"ns"}
+  }
+  rownames(m)<-genelist
+  colnames(m)<-genelist
+  rownames(ms)<-genelist
+  colnames(ms)<-genelist
+  m<-t(m)
+  ms<-t(ms)
+  m<-as_tibble(m, rownames = NA)
+  ms<-as_tibble(ms, rownames = NA)
+  write.xlsx(m, "IFT_retrograde_2.xlsx", sheetName = paste(markers[j]), append = TRUE)
+  write.xlsx(ms, "IFT_retrograde_2_sig.xlsx", sheetName = paste(markers[j]), append = TRUE)
+}
+
+
+
+# Anterograde
+for (j in 1:length(markers)){
+  dfy<-df %>%
+    filter(Marker == unique(df$Marker)[j] & IFT == "Anterograde") %>%
+    dplyr::select(Number.of.Particles, Genotype)
+  m<-matrix("-",nrow = length(genelist), ncol = length(genelist))
+  ms<-matrix("-",nrow = length(genelist), ncol = length(genelist))
+  for (i in 1:y){
+    #print(c(x[1,i],x[2,i]))
+    #print(i)
+    s<-shapiro.test(dfy$Number.of.Particles[dfy[[genotype]] %in% c(x[1,i],x[2,i])])
+    
+    if (s$p.value < 0.05){
+      t<-wilcox.test(eval(x2) ~ eval(x1), data = dfy[dfy[[genotype]] %in% c(x[1,i],x[2,i]),], exact = FALSE)
+    }
+    else {
+      t<-t.test(eval(x2) ~ eval(x1), data = dfy[dfy[[genotype]] %in% c(x[1,i],x[2,i]),], alternative = "two.sided", var.equal = FALSE)
+    }
+    
+    m[which(genelist == x[1,i]),which(genelist == x[2,i])]<-as.numeric(t$p.value)
+    if (t$p.value < 0.05 && t$p.value >= 0.01){
+      ms[which(genelist == x[1,i]),which(genelist == x[2,i])]<-"*"
+    }
+    else if (t$p.value < 0.01 && t$p.value >= 0.001){
+      ms[which(genelist == x[1,i]),which(genelist == x[2,i])]<-"**"
+    }
+    else if (t$p.value < 0.001 && t$p.value >= 0.0001){
+      ms[which(genelist == x[1,i]),which(genelist == x[2,i])]<-"***"
+    }
+    else if (t$p.value < 0.0001){
+      ms[which(genelist == x[1,i]),which(genelist == x[2,i])]<-"****"
+    }
+    else {ms[which(genelist == x[1,i]),which(genelist == x[2,i])]<-"ns"}
+  }
+  rownames(m)<-genelist
+  colnames(m)<-genelist
+  rownames(ms)<-genelist
+  colnames(ms)<-genelist
+  m<-t(m)
+  ms<-t(ms)
+  m<-as_tibble(m, rownames = NA)
+  ms<-as_tibble(ms, rownames = NA)
+  write.xlsx(m, "IFT_anterograde_2.xlsx", sheetName = paste(markers[j]), append = TRUE)
+  write.xlsx(ms, "IFT_anterograde_2_sig.xlsx", sheetName = paste(markers[j]), append = TRUE)
+}
+
+

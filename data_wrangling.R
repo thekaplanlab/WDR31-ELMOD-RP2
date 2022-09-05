@@ -255,3 +255,70 @@ for (i in 1:4){
 }
 
 
+# New IFT file
+
+iftzn <- suppressMessages(read_xlsx("./files/IFT_particles_NEW_revision2.xlsx", sheet = 1))
+iftzn <- iftzn[c(-1, -2), -1]
+iftzn_long <- pivot_longer(iftzn, everything(), names_to = "Genotype2", values_to = "Speed1", values_drop_na = TRUE)
+
+iftzn2 <- suppressMessages(read_xlsx("files/IFT_particles_NEW_revision2.xlsx", sheet = 1, skip = 1))
+iftzn2 <- iftzn2[-1, -1]
+iftzn_long_2 <- pivot_longer(iftzn2, everything(), names_to = "Genotype", values_to = "Speed2", values_drop_na = TRUE)
+
+iftzn3 <- suppressMessages(read_xlsx("files/IFT_particles_NEW_revision2.xlsx", sheet = 1, skip = 2))
+iftzn3 <- iftzn3[, -1]
+iftzn_long_3 <- pivot_longer(iftzn3, everything(), names_to = "Part", values_to = "Speed", values_drop_na = TRUE)
+
+
+iftzn_all <- cbind(iftzn_long, iftzn_long_2, iftzn_long_3)
+iftzn_all <- iftzn_all %>% select(-Speed1, -Speed2)
+iftzn_all[, 1:3] <- as.data.frame(lapply(iftzn_all[, 1:3], function(x) gsub("\\.\\.\\.[0-9]+", "", x)))
+
+iftzn_all$Speed<-iftzn_all$Speed / (0.333 * 90)
+
+iftzn_all_stat<-iftzn_all
+colnames(iftzn_all_stat)<-c("Marker","Genotype","IFT","Number.of.Particles")
+
+
+
+# Morphology 2
+
+morphologyn<-read_xlsx("./files/AWB_cilia_morphology_NEW_revision.xlsx")
+
+morphologyn1<-morphologyn %>%
+  mutate(Normal = 100*(Normal1 / (Normal1 + Fan1 + `Extra Branch1` + `Backward Projection1`))) %>%
+  mutate(Fan = 100*(Fan1 / (Normal1 + Fan1 + `Extra Branch1` + `Backward Projection1`))) %>%
+  mutate(`Extra Branch` = 100*(`Extra Branch1` / (Normal1 + Fan1 + `Extra Branch1` + `Backward Projection1`))) %>%
+  mutate(`Backward Projection` = 100*(`Backward Projection1` / (Normal1 + Fan1 + `Extra Branch1` + `Backward Projection1`))) %>%
+  pivot_longer(cols = 6:9,
+               names_to = "Phenotype",
+               values_to = "Count")
+colnames(morphologyn1)[1]<-"Genotype"
+
+morphologyn1$Phenotype<-factor(morphologyn1$Phenotype, levels = c("Normal","Fan","Extra Branch","Backward Projection"))
+morphologyn1$Genotype<-factor(morphologyn1$Genotype, levels = rev(unique(morphologyn1$Genotype)))
+
+
+
+morphologym<-read_xlsx("./files/AWB_cilia_morphology_NEW_revision.xlsx", sheet = 2)
+
+morphologym1<-morphologym %>%
+  mutate(Normal = 100*(Normal1 / (Normal1 + Fan1 + `Extra Branch1` + `Backward Projection1`))) %>%
+  mutate(Fan = 100*(Fan1 / (Normal1 + Fan1 + `Extra Branch1` + `Backward Projection1`))) %>%
+  mutate(`Extra Branch` = 100*(`Extra Branch1` / (Normal1 + Fan1 + `Extra Branch1` + `Backward Projection1`))) %>%
+  mutate(`Backward Projection` = 100*(`Backward Projection1` / (Normal1 + Fan1 + `Extra Branch1` + `Backward Projection1`))) %>%
+  pivot_longer(cols = 6:9,
+               names_to = "Phenotype",
+               values_to = "Count")
+colnames(morphologym1)[1]<-"Genotype"
+
+morphologym1$Phenotype<-factor(morphologym1$Phenotype, levels = c("Normal","Fan","Extra Branch","Backward Projection"))
+morphologym1$Genotype<-factor(morphologym1$Genotype, levels = rev(unique(morphologym1$Genotype)))
+
+
+morphologyn_stat<-read_xlsx("./files/AWB_cilia_morphology_NEW_revision.xlsx", sheet = 1)
+morphologym_stat<-read_xlsx("./files/AWB_cilia_morphology_NEW_revision.xlsx", sheet = 2)
+
+
+
+
